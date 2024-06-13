@@ -1,0 +1,7 @@
+POST http://localhost:3333/sessions
+Content-Type: application/json
+
+{
+	"email": "vinicius100@live.com",
+	"password": "123456"
+}
