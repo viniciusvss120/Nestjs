@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Body, ConflictException, Controller, HttpCode, Post, UsePipes } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import {hash} from 'bcrypt'
+import { PrismaService } from '@/prisma/prisma.service';
+import { hash } from 'bcrypt'
 import { z } from 'zod';
-import { ZodValidationPipe } from 'src/pipes/zod-validation-pipes';
+import { ZodValidationPipe } from '@/pipes/zod-validation-pipes';
 
 // Aqui estamos determinando os tipos das requisições vindas do body
 const createAccountBodySchema = z.object({
@@ -17,16 +17,16 @@ type createAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @Controller('/account')
 export class CreateAccount {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
 
   @Post()
   @HttpCode(201)
-   // Usamos esse decorator para globalizar as validações do zod e fazer uma tratativa melhor dos erros
+  // Usamos esse decorator para globalizar as validações do zod e fazer uma tratativa melhor dos erros
   @UsePipes(new ZodValidationPipe(createAccountBodySchema))
   async handle(@Body() body: createAccountBodySchema) {
-    const {name, email, password} = body
-  
+    const { name, email, password } = body
+
 
     const userWhitSomeEmail = await this.prisma.user.findUnique({
       where: {
