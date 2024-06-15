@@ -22,7 +22,7 @@ function generateUniqueDataBaseURL(schemaId: string) {
 }
 const schemaId = randomUUID()
 beforeAll(async () => {
-  const databaseURL = generateUniqueDataBaseURL(randomUUID())
+  const databaseURL = generateUniqueDataBaseURL(schemaId)
   
   process.env.DATABASE_URL = databaseURL
 
@@ -31,7 +31,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await prisma.$executeRawUnsafe(`DROP SCHEMAS F EXISTS "${schemaId}" CASCADE`)
+  await prisma.$executeRawUnsafe(`DROP SCHEMAS IF EXISTS "${schemaId}" CASCADE`)
 
   await prisma.$disconnect()
 })
