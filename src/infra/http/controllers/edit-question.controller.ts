@@ -20,7 +20,7 @@ const bodyValidation = new ZodValidationPipe(editQuestionSchema)
 export class EditQuestion {
   constructor(
     private editQuestion: EditQuestionUseCase
-  ) { }
+  ) {}
 
   @Put()
   @HttpCode(204)
@@ -36,9 +36,9 @@ export class EditQuestion {
       content,
       authorId: userId,
       attachmentsIds: [],
-      questionId
+      questionId,
     })
-
+    console.log(result)
     if (result.isLeft()) {
       throw new BadRequestException()
     }

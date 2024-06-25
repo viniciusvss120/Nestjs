@@ -43,10 +43,6 @@ import { QuestionAttachmentsRepository } from '@/domain/forum/application/reposi
       useClass: PrismaAnswerAttachmentsRepository
     },
     {
-      provide: QuestionsRepository,
-      useClass: PrismaQuestionRepository
-    },
-    {
       provide: QuestionCommentsRepository,
       useClass: PrismaQuestionCommentsRepository
     },
