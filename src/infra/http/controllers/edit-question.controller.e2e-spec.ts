@@ -54,7 +54,7 @@ describe('Edit question (E2E)', () => {
         title: 'Novo título da pergunta',
         content: 'Conteúdo da pergunta',
       })
-      console.log( response)
+      
     expect(response.statusCode).toBe(204)
 
 
