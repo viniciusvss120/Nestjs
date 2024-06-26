@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
+// import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
@@ -11,9 +11,9 @@ import { QuestionFactory } from 'test/factories/make-question'
 import { StudentFactory } from 'test/factories/make-student'
 
 
-describe('Delete answer (E2E)', () => {
+describe('Fetch question answer(E2E)', () => {
   let app: INestApplication
-  let prisma: PrismaService
+  // let prisma: PrismaService
   let studentFactory: StudentFactory
   let questionFactory: QuestionFactory
   let answerFactory: AnswerFactory
@@ -27,7 +27,7 @@ describe('Delete answer (E2E)', () => {
 
     app = moduleRef.createNestApplication()
 
-    prisma = moduleRef.get(PrismaService)
+    // prisma = moduleRef.get(PrismaService)
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
     answerFactory = moduleRef.get(AnswerFactory)
@@ -36,34 +36,32 @@ describe('Delete answer (E2E)', () => {
     await app.init()
   })
 
-  test('(DELETE) /answer/:id', async () => {
+  test('(GET) /question/:questionId/answer', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
-    const question = await questionFactory.makePrismaQuestion({
-      authorId: user.id
-    })
+    
+    const question = await questionFactory.makePrismaQuestion({authorId: user.id})
 
-    const answer = await answerFactory.makePrismaAnswer({
-      questionId: question.id,
-      authorId: user.id
-    })
-  
-    const answerId = answer.id.toString()
+    await Promise.all([
+      answerFactory.makePrismaAnswer({authorId: user.id, questionId:  question.id, content: 'answer 1'}),
+      answerFactory.makePrismaAnswer({authorId: user.id, questionId:  question.id, content: 'answer 2'})
+    ])
+
+    const questionId = question.id.toString()
+
     const response = await request(app.getHttpServer())
-      .delete(`/answer/${answerId}`)
+      .get(`/question/${questionId}/answer`)
       .set('Authorization', `Bearer ${accessToken}`)
-      
-    expect(response.statusCode).toBe(204)
+      .send()
 
-
-    const answerOnDatabase = await prisma.answer.findFirst({
-      where: {
-        content: 'Novo Conteúdo da pergunta',
-      }
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({
+      answers: expect.arrayContaining([
+        expect.objectContaining({ content: 'answer 1' }),
+        expect.objectContaining({ content: 'answer 2' })
+      ])
     })
-
-    expect(answerOnDatabase).toBeNull()
   })
 })
