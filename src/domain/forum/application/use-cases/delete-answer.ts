@@ -17,9 +17,10 @@ export class DeleteAnswerUseCase {
   constructor(private answersRepository: AnswersRepository) {}
 
   async execute({
-    answerId,
     authorId,
+    answerId,
   }: DeleteAnswerUseCaseRequest): Promise<DeleteAnswerUseCaseResponse> {
+    console.log(answerId)
     const answer = await this.answersRepository.findById(answerId)
 
     if (!answer) {

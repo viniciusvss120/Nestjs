@@ -36,7 +36,7 @@ export class EditAnswer {
       content,
       attachmentsIds: [],
     })
-    console.log(answerId)
+  
     if (result.isLeft()) {
       throw new BadRequestException()
     }
