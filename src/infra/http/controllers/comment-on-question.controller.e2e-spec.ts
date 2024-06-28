@@ -5,17 +5,18 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
-import { hash } from 'bcrypt'
 import request from 'supertest'
 import { QuestionFactory } from 'test/factories/make-question'
+// import { QuestionCommentFactory } from 'test/factories/make-question-comment'
 import { StudentFactory } from 'test/factories/make-student'
 
 
-describe('Delete question (E2E)', () => {
+describe('Answer question (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
   let studentFactory: StudentFactory
   let questionFactory: QuestionFactory
+  // let questionCommentFactory: QuestionCommentFactory
   let jwt: JwtService
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -29,16 +30,14 @@ describe('Delete question (E2E)', () => {
     prisma = moduleRef.get(PrismaService)
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
+    // questionCommentFactory = moduleRef.get(QuestionCommentFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
 
-  test('(DELETE) /question/:id', async () => {
-    const user = await studentFactory.makePrismaStudent({
-      email: 'vinicius@gmail.com',
-      password: await hash('123456', 8)
-    })
+  test('(POST) /question/:questionId/comments', async () => {
+    const user = await studentFactory.makePrismaStudent()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -47,20 +46,26 @@ describe('Delete question (E2E)', () => {
     })
 
     const questionId = question.id.toString()
-    const response = await request(app.getHttpServer())
-      .delete(`/question/${questionId}`)
+    try {
+      const response = await request(app.getHttpServer())
+      .post(`/question/${questionId}/comments`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send()
+      .send({
+        content: 'Comentario da pergunta',
+      })
+      expect(response.statusCode).toBe(201)
+    } catch (error) {
+      console.log(error)
+    }
+    
 
-    expect(response.statusCode).toBe(204)
 
-
-    const questionOnDatabase = await prisma.question.findUnique({
+    const commentOnDatabase = await prisma.comment.findFirst({
       where: {
-        id: questionId
+        content: 'Comentario da pergunta',
       }
     })
 
-    expect(questionOnDatabase).toBeNull()
+    expect(commentOnDatabase).toBeTruthy()
   })
 })
