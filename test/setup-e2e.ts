@@ -1,10 +1,12 @@
 /* eslint-disable prettier/prettier */
-import 'dotenv/config'
+import { config } from 'dotenv'
 import { execSync } from 'node:child_process'
 
 import { PrismaClient } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
 
+config({ path: '.env', override: true})
+config({ path: '.env.test', override: true})
 const prisma = new PrismaClient()
 
 // O objetivo dessa função é alternar os database de acordo com a url de conexão, aqui vamos transformar o DATABASE_URL em uma url com o new ULR, vamos acessar os parâmetros e trocar pelo schema que for passado para a função.

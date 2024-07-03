@@ -17,6 +17,8 @@ import { AnswerCommentsRepository } from '@/domain/forum/application/repositorie
 import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository';
 import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository';
 import { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments-repository';
+import { AttachmentRepository } from '@/domain/forum/application/repositories/attachment-repository';
+import { PrismaAttachmentRepository } from './prisma/repository/prisma-attachment-repository';
 
 @Module({
   providers: [
@@ -43,6 +45,10 @@ import { QuestionAttachmentsRepository } from '@/domain/forum/application/reposi
       useClass: PrismaAnswerAttachmentsRepository
     },
     {
+      provide: AttachmentRepository,
+      useClass: PrismaAttachmentRepository
+    },
+    {
       provide: QuestionCommentsRepository,
       useClass: PrismaQuestionCommentsRepository
     },
@@ -56,6 +62,7 @@ import { QuestionAttachmentsRepository } from '@/domain/forum/application/reposi
     AnswersRepository,
     AnswerCommentsRepository,
     AnswerAttachmentsRepository,
+    AttachmentRepository,
     QuestionsRepository,
     StudentRepository,
     QuestionCommentsRepository,

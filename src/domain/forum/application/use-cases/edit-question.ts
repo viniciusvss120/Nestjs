@@ -37,7 +37,6 @@ export class EditQuestionUseCase {
     content,
     attachmentsIds,
   }: EditQuestionUseCaseRequest): Promise<EditQuestionUseCaseResponse> {
-    console.log('Bateu aqui', questionId)
     const question = await this.questionsRepository.findById(questionId)
 
     if (!question) {
