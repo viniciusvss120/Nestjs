@@ -32,7 +32,7 @@ export class CreateAccount {
     const result = await this.registerStudent.execute({
       name,
       email,
-      password
+      password,
     })
 
     if (result.isLeft()) {

@@ -10,7 +10,8 @@ import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/crea
 // Aqui estamos determinando os tipos das requisições vindas do body
 const createQuestionSchema = z.object({
   title: z.string(),
-  content: z.string()
+  content: z.string(),
+  attachment: z.array(z.string().uuid())
 })
 
 // Aqui estamos inferindo os tipos
@@ -29,13 +30,13 @@ export class CreateQuestion {
     @Body(bodyValidation) body: CreateQuestionSchema,
     @CurrentUser() user: UserSchema
   ) {
-    const { title, content } = body
+    const { title, content, attachment } = body
     const userId = user.sub
     const result = await this.createQuestion.execute({
       title,
       content,
       authorId: userId,
-      attachmentsIds: []
+      attachmentsIds: attachment
     })
 
     if (result.isLeft()) {
