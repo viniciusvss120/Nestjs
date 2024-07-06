@@ -1,10 +1,9 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-
 import {
   QuestionAttachment,
   QuestionAttachmentProps,
 } from '@/domain/forum/enterprise/entities/question-attachment'
-import { PrismaQuestionAttachmentMapper } from '@/infra/database/prisma/mappers/prisma-question-attachment-mapper'
+
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 
@@ -24,19 +23,41 @@ export function makeQuestionAttachment(
   return questionAttachment
 }
 
+// @Injectable()
+// export class QuestionAttachmentFactory {
+//   constructor(private prisma: PrismaService) {}
+
+//   async makePrismaQuestion(
+//     data: Partial<QuestionAttachmentProps> = {},
+//   ): Promise<QuestionAttachment> {
+//     const questionattachment = makeQuestionAttachment(data)
+
+//     await this.prisma.attachment.create({
+//       data: PrismaQuestionAttachmentMapper.toPrisma(questionattachment),
+//     })
+
+//     return questionattachment
+//   }
+
+// }
 @Injectable()
 export class QuestionAttachmentFactory {
   constructor(private prisma: PrismaService) {}
 
-  async makePrismaQuestion(
+  async makePrismaQuestionAttachement(
     data: Partial<QuestionAttachmentProps> = {},
   ): Promise<QuestionAttachment> {
-    const questionattachment = makeQuestionAttachment(data)
+    const questionAttachment = makeQuestionAttachment(data)
 
-    await this.prisma.attachment.create({
-      data: PrismaQuestionAttachmentMapper.toPrisma(questionattachment),
+    await this.prisma.attachment.update({
+      where: {
+        id: questionAttachment.attachmentId.toString(),
+      },
+      data: {
+        questionId: questionAttachment.questionId.toString(),
+      },
     })
 
-    return questionattachment
+    return questionAttachment
   }
 }

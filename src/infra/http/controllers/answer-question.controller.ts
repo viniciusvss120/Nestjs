@@ -9,15 +9,17 @@ import { AnswerQuestionUseCase } from '@/domain/forum/application/use-cases/answ
 
 // Aqui estamos determinando os tipos das requisições vindas do body
 const answerQuestionSchema = z.object({
-  content: z.string()
+  content: z.string(),
+  attachments: z.array(z.string().uuid())
 })
+
+const bodyValidation = new ZodValidationPipe(answerQuestionSchema)
 
 // Aqui estamos inferindo os tipos
 type AnswerQuestionSchema = z.infer<typeof answerQuestionSchema>
 
-const bodyValidation = new ZodValidationPipe(answerQuestionSchema)
 
-@Controller('/question/:questionId/answer')
+@Controller('/questions/:questionId/answers')
 export class AnswerQuestionController {
   constructor(
     private answerQuestion: AnswerQuestionUseCase
@@ -29,17 +31,24 @@ export class AnswerQuestionController {
     @CurrentUser() user: UserSchema,
     @Param('questionId') questionId: string
   ) {
-    const { content } = body
+    const { content, attachments } = body
     const userId = user.sub
-    const result = await this.answerQuestion.execute({
-      authorId: userId,
-      questionId,
-      content,
-      attachmentsIds: []
-    })
+    console.log('result', content, attachments, userId, questionId)
+    // try { 
+    //   const result = await this.answerQuestion.execute({
+    //     authorId: userId,
+    //     questionId,
+    //     content,
+    //     attachmentsIds: attachments
+    //   })
 
-    if (result.isLeft()) {
-      throw new BadRequestException()
-    }
+    //   console.log(result)
+    //   if (result.isLeft()) {
+    //     throw new BadRequestException()
+    //   }
+    // } catch (error) {
+    //   console.log(error)
+    // }
+
   }
 }

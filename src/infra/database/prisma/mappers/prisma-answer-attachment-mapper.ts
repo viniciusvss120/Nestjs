@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { AnswerAttachment } from '@/domain/forum/enterprise/entities/answer-attachment'
-import {Attachment as PrismaAttachment} from '@prisma/client'
+import {Prisma, Attachment as PrismaAttachment} from '@prisma/client'
 
 // Essa classe é responsável por converter a classe que vem do prisma  para uma classe igual da entidade de dominio.
 export class PrismaAnswerAttachmentMapper {
@@ -16,5 +16,25 @@ export class PrismaAnswerAttachmentMapper {
       attachmentId: new UniqueEntityID(raw.id),
       answerId: new UniqueEntityID(raw.answerId)
     }, new UniqueEntityID(raw.id))
+  }
+
+  static toPrismaUpdateMany(
+    attachments: AnswerAttachment[]
+  ): Prisma.AttachmentUpdateManyArgs {
+
+    const attachmentIds = attachments.map((attachment) => {
+      return attachment.attachmentId.toString()
+    })
+
+    return {
+      where: {
+        id: {
+          in: attachmentIds,
+        },     
+      },
+      data: {
+         answerId: attachments[0].answerId.toString(),
+      },
+    }
   }
 }

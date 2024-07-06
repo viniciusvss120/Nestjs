@@ -14,6 +14,7 @@ export interface AnswerProps {
 }
 
 export class Answer extends AggregateRoot<AnswerProps> {
+  answerId: any
   get authorId() {
     return this.props.authorId
   }

@@ -61,8 +61,6 @@ describe('Fetch answer comments (E2E)', () => {
       .get(`/answer/${answerId}/comments`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
-
-    console.log(response.body)
     expect(response.statusCode).toBe(200)
     } catch (error) {
       console.log(error)

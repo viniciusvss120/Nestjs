@@ -21,9 +21,9 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     return answer
   }
 
-  async findManyByQuestionId(questionId: string, { page }: PaginationParams) {
+  async findManyByQuestionId(answerId: string, { page }: PaginationParams) {
     const answers = this.items
-      .filter((item) => item.questionId.toString() === questionId)
+      .filter((item) => item.answerId.toString() === answerId)
       .slice((page - 1) * 20, page * 20)
 
     return answers
@@ -33,12 +33,25 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     this.items.push(answer)
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
+
+    // Aqui estamos criando os Attachments(anexos) ao mesmo tempo que criamos as perguntas
+    await this.answerAttachmentsRepository.createMany(
+      answer.attachments.getItems(),
+    )
   }
 
   async save(answer: Answer) {
     const itemIndex = this.items.findIndex((item) => item.id === answer.id)
 
     this.items[itemIndex] = answer
+
+    await this.answerAttachmentsRepository.createMany(
+      answer.attachments.getNewItems(),
+    )
+
+    await this.answerAttachmentsRepository.deleteMany(
+      answer.attachments.getRemovedItems(),
+    )
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
   }
