@@ -33,22 +33,22 @@ export class AnswerQuestionController {
   ) {
     const { content, attachments } = body
     const userId = user.sub
-    console.log('result', content, attachments, userId, questionId)
-    // try { 
-    //   const result = await this.answerQuestion.execute({
-    //     authorId: userId,
-    //     questionId,
-    //     content,
-    //     attachmentsIds: attachments
-    //   })
+    console.log('result')
+    try { 
+      const result = await this.answerQuestion.execute({
+        authorId: userId,
+        questionId,
+        content,
+        attachmentsIds: attachments
+      })
 
-    //   console.log(result)
-    //   if (result.isLeft()) {
-    //     throw new BadRequestException()
-    //   }
-    // } catch (error) {
-    //   console.log(error)
-    // }
+      console.log(result)
+      if (result.isLeft()) {
+        throw new BadRequestException()
+      }
+    } catch (error) {
+      console.log(error)
+    }
 
   }
 }
