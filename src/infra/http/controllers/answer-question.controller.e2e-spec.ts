@@ -50,21 +50,17 @@ describe('Answer question (E2E)', async () => {
     const attachment1 = await attachmentFactory.makePrismaAttachement()
     const attachment2 = await attachmentFactory.makePrismaAttachement()
 
-    try {
-      const response = await request(app.getHttpServer())
-      .post(`/questions/${questionId}/answers`)
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        content: 'New answer',
-        attachment: [attachment1.id.toString(), attachment2.id.toString()],
-      })
-       expect(response.statusCode).toBe(201)
-    } catch (error) {
-      console.log(error)
-    }
+   
+    const response = await request(app.getHttpServer())
+    .post(`/questions/${questionId}/answers`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      content: 'New answer',
+      attachments: [attachment1.id.toString(), attachment2.id.toString()],
+    })
+     expect(response.statusCode).toBe(201)
+   
     
-
-
     const answerOnDatabase = await prisma.answer.findFirst({
       where: {
         content: 'New answer',
@@ -75,7 +71,7 @@ describe('Answer question (E2E)', async () => {
 
     const attachmentOnDatabase = await prisma.attachment.findMany({
       where: {
-        questionId: answerOnDatabase?.id
+        answerId: answerOnDatabase?.id
       }
     })
   

@@ -9,7 +9,7 @@ import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-q
 const editQuestionSchema = z.object({
   title: z.string(),
   content: z.string(),
-  attaments: z.array(z.string().uuid())
+  attachments: z.array(z.string().uuid())
 })
 
 // Aqui estamos inferindo os tipos
@@ -30,13 +30,13 @@ export class EditQuestion {
     @CurrentUser() user: UserSchema,
     @Param('id') questionId: string
   ) {
-    const { title, content, attaments } = body
+    const { title, content, attachments } = body
     const userId = user.sub
     const result = await this.editQuestion.execute({
       title,
       content,
       authorId: userId,
-      attachmentsIds: attaments,
+      attachmentsIds: attachments,
       questionId,
     })
     console.log(result)

@@ -36,19 +36,18 @@ export class AnswerQuestionController {
     console.log('result')
     try { 
       const result = await this.answerQuestion.execute({
-        authorId: userId,
         questionId,
         content,
+        authorId: userId,
         attachmentsIds: attachments
       })
 
-      console.log(result)
       if (result.isLeft()) {
         throw new BadRequestException()
       }
     } catch (error) {
       console.log(error)
     }
-
+ 
   }
 }

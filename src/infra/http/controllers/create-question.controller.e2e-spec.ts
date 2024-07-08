@@ -51,7 +51,7 @@ describe('Create question (E2E)', () => {
       .send({
         title: 'Título da pergunta',
         content: 'Conteúdo da pergunta',
-        attachements: [
+        attachments: [
           attachment1.id.toString(),
           attachment2.id.toString()
         ]

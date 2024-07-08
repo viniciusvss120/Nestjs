@@ -14,13 +14,13 @@ export class InMemoryAnswerAttachmentsRepository
     return answerAttachments
   }
 
-  async createMany(attachment: AnswerAttachment[]): Promise<void> {
-    this.items.push(...attachment)
+  async createMany(attachments: AnswerAttachment[]): Promise<void> {
+    this.items.push(...attachments)
   }
 
-  async deleteMany(attachment: AnswerAttachment[]): Promise<void> {
+  async deleteMany(attachments: AnswerAttachment[]): Promise<void> {
     const answerAttachments = this.items.filter((item) => {
-      return !attachment.some((attachment) => attachment.equals(item))
+      return !attachments.some((attachment) => attachment.equals(item))
     })
 
     this.items = answerAttachments

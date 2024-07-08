@@ -8,7 +8,7 @@ import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-ans
 
 const editAnswerSchema = z.object({
   content: z.string(),
-  attachements: z.array(z.string().uuid())
+  attachments: z.array(z.string().uuid())
 })
 
 // Aqui estamos inferindo os tipos
@@ -29,13 +29,13 @@ export class EditAnswer {
     @CurrentUser() user: UserSchema,
     @Param('id') answerId: string
   ) {
-    const { content, attachements } = body
+    const { content, attachments } = body
     const userId = user.sub
     const result = await this.editAnswer.execute({
       authorId: userId,
       answerId,
       content,
-      attachmentsIds: attachements,
+      attachmentsIds: attachments,
     })
   
     if (result.isLeft()) {

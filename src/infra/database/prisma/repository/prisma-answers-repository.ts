@@ -66,7 +66,7 @@ export class PrismaAnswerRepository implements AnswersRepository {
       }),
 
       this.answerAttachmentRepository.createMany(
-        answer.attachments.getItems()
+        answer.attachments.getNewItems()
       ),
   
       this.answerAttachmentRepository.deleteMany(

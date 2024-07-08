@@ -11,7 +11,7 @@ import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/crea
 const createQuestionSchema = z.object({
   title: z.string(),
   content: z.string(),
-  attachment: z.array(z.string().uuid())
+  attachments: z.array(z.string().uuid())
 })
 
 // Aqui estamos inferindo os tipos
@@ -30,13 +30,13 @@ export class CreateQuestion {
     @Body(bodyValidation) body: CreateQuestionSchema,
     @CurrentUser() user: UserSchema
   ) {
-    const { title, content, attachment } = body
+    const { title, content, attachments } = body
     const userId = user.sub
     const result = await this.createQuestion.execute({
       title,
       content,
       authorId: userId,
-      attachmentsIds: attachment
+      attachmentsIds: attachments
     })
 
     if (result.isLeft()) {
