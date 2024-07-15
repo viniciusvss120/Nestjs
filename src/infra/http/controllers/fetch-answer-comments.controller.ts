@@ -4,7 +4,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipes';
 // import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { z } from 'zod';
 import { FetchAnswerCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-answer-comments';
-import { CommentPresenter } from '../presenters/comments-presenter';
+import { CommentWithAuthorPresenter } from '../presenters/comments-with-author-presenter';
 
 // Aqui estamos tipando a QueryParams, ela vem como uma string, é opcional, por padrão começa com 1, transforma em numero e definimos que o valor minimo é 1
 const pageQueryParams = z
@@ -40,9 +40,9 @@ export class FetchAnswerCommentsController {
       throw new BadRequestException()
     }
 
-    const answersComments = result.value.answerComments
+    const answersComments = result.value.comments
     return {
-      comments: answersComments.map(CommentPresenter.toHttp)
+      comments: answersComments.map(CommentWithAuthorPresenter.toHttp)
     }
   }
 

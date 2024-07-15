@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { BadRequestException, Controller, Get, Param, Query } from '@nestjs/common';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipes';
-// import { PrismaService } from '@/infra/database/prisma/prisma.service';
+
 import { z } from 'zod';
 import { FetchQuestionCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-question-comments';
-import { CommentPresenter } from '../presenters/comments-presenter';
+import { CommentWithAuthorPresenter } from '../presenters/comments-with-author-presenter';
 
 // Aqui estamos tipando a QueryParams, ela vem como uma string, é opcional, por padrão começa com 1, transforma em numero e definimos que o valor minimo é 1
 const pageQueryParams = z
@@ -40,9 +40,9 @@ export class FetchQuestionCommentsController {
       throw new BadRequestException()
     }
 
-    const questionsComments = result.value.questionComments
+    const comments = result.value.comments
     return {
-      comments: questionsComments.map(CommentPresenter.toHttp)
+      comments: comments.map(CommentWithAuthorPresenter.toHttp)
     }
   }
 

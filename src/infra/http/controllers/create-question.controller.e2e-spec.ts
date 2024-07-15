@@ -5,7 +5,6 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
-import { hash } from 'bcrypt'
 import request from 'supertest'
 import { AttachmentFactory } from 'test/factories/make-attachment'
 import { StudentFactory } from 'test/factories/make-student'
@@ -35,10 +34,7 @@ describe('Create question (E2E)', () => {
   })
 
   test('(POST) /question', async () => {
-    const user = await studentFactory.makePrismaStudent({
-       email: 'vinicius@gmail.com',
-        password: await hash('123456', 8)
-    })
+    const user = await studentFactory.makePrismaStudent()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
