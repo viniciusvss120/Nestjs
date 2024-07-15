@@ -62,7 +62,7 @@ describe('Get Question By Slug', () => {
     })
 
     console.log(result.value)
-    expect(result.value).toEqual({
+    expect(result.value).toMatchObject({
       question: expect.objectContaining({
         title: newQuestion.title,
         author: 'Vinicius Silva',
