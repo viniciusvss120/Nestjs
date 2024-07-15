@@ -17,13 +17,17 @@ export interface QuestionDetailsProps {
   updatedAt?: Date | null
 }
 
-export class QuestionDetails extends ValueObject <QuestionDetailsProps> {
+export class QuestionDetails extends ValueObject<QuestionDetailsProps> {
   get questionId() {
     return this.props.questionId
   }
-  
-  get contet() {
+
+  get content() {
     return this.props.content
+  }
+
+  get title() {
+    return this.props.title
   }
 
   get authorId() {
@@ -32,6 +36,10 @@ export class QuestionDetails extends ValueObject <QuestionDetailsProps> {
 
   get author() {
     return this.props.author
+  }
+
+  get slug() {
+    return this.props.slug
   }
 
   get createdAt() {
